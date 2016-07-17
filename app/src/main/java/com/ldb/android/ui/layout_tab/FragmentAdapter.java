@@ -37,4 +37,11 @@ public class FragmentAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return titleList.get(position);
     }
+
+    @Override
+    public float getPageWidth(int position) {
+        if(position == 2)
+            return 1.f;
+        return 0.4f;
+    }
 }

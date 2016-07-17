@@ -25,7 +25,7 @@ public class ViewPagerAndFragmentPagerAdapterActivity extends FragmentActivity
             ViewPagerAndFragmentPagerAdapterActivity.class.getSimpleName();
 
     // 三个textview
-    private TextView tab1Tv, tab2Tv, tab3Tv;
+    private TextView tab1Tv, tab2Tv, tab3Tv, tab4Tv;
     // 指示器
     private ImageView cursorImg;
     // viewPager
@@ -72,13 +72,15 @@ public class ViewPagerAndFragmentPagerAdapterActivity extends FragmentActivity
         tab1Tv = (TextView) findViewById(R.id.tab1_tv);
         tab2Tv = (TextView) findViewById(R.id.tab2_tv);
         tab3Tv = (TextView) findViewById(R.id.tab3_tv);
+        tab4Tv = (TextView) findViewById(R.id.tab4_tv);
 
-        tabCount = 3;
+        tabCount = 4;
         widthOfOneTab = screenWidth / tabCount;
 
         tab1Tv.setOnClickListener(this);
         tab2Tv.setOnClickListener(this);
         tab3Tv.setOnClickListener(this);
+        tab4Tv.setOnClickListener(this);
 
         initViewPager();
     }
@@ -92,10 +94,13 @@ public class ViewPagerAndFragmentPagerAdapterActivity extends FragmentActivity
         fragmentsList.add(fragment);
         fragment = new FragmentAndFManager_Fragment3();
         fragmentsList.add(fragment);
+        fragment = new FragmentAndFManager_Fragment4();
+        fragmentsList.add(fragment);
 
         viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), fragmentsList));
         viewPager.setCurrentItem(0);
         viewPager.setOnPageChangeListener(this);
+        viewPager.setPageMargin(100);
     }
 
     @Override
@@ -111,6 +116,9 @@ public class ViewPagerAndFragmentPagerAdapterActivity extends FragmentActivity
             case R.id.tab3_tv:
                 viewPager.setCurrentItem(2);
                 break;
+            case R.id.tab4_tv:
+                viewPager.setCurrentItem(3);
+                break;
         }
     }
 
@@ -119,6 +127,16 @@ public class ViewPagerAndFragmentPagerAdapterActivity extends FragmentActivity
         offset = (widthOfOneTab - cursorImg.getLayoutParams().width) / 2;
         Log.d(LOG_TAG, "In onPageScrolled: " + position + " -- " + positionOffset + " -- " +
                 positionOffsetPixels);
+        Log.d(LOG_TAG, "In onPageScrolled ScrollX: " + viewPager.getScrollX());
+//        Log.d(LOG_TAG, "In onPageScrolled viewPager.child: " + viewPager.getChildAt(position).toString());
+        Log.d(LOG_TAG, "In onPageScrolled viewPager.left:" + viewPager.getLeft());
+        for(int i = 0; i < viewPager.getChildCount(); i++) {
+            Log.d(LOG_TAG, "In onPageScrolled viewPager.child:" + i);
+            Log.d(LOG_TAG, "In onPageScrolled viewPager.child.left: " + viewPager.getChildAt(i).getLeft());
+            Log.d(LOG_TAG, "In onPageScrolled viewPager.child.width: " + viewPager.getChildAt(i).getWidth());
+            Log.d(LOG_TAG, "In onPageScrolled viewPager.child.ScrollX: " + viewPager.getChildAt(i).getScrollX());
+        }
+
         //final float scale = getResources().getDisplayMetrics().density;
 //        if(position == 0){
 //            lp.leftMargin = (int) (positionOffsetPixels / 3) + offset;
@@ -126,6 +144,8 @@ public class ViewPagerAndFragmentPagerAdapterActivity extends FragmentActivity
 //            lp.leftMargin = (int) (positionOffsetPixels / 3) + widthOfOneTab + offset;
 //        }
 
+        // position 是距离ViewPager内容区左边最近的可视view在adapter中的位置position。
+        // positionOffset, posifsetPixels 是position对应可视view的左边偏离ViewPager内容区左边的距离与view宽度的比例或距离。
         if(position < tabCount - 1){
             lp.leftMargin = (int) (positionOffsetPixels / tabCount) + widthOfOneTab * position + offset;
         }
